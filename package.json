@@ -1,0 +1,23 @@
+{
+  "name": "campaign-manager",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Mini Campaign Manager — full-stack MarTech demo (Express + Sequelize + React + RTK Query).",
+  "license": "MIT",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "typecheck": "yarn workspaces run typecheck",
+    "test": "yarn workspace @campaign-manager/api test",
+    "dev:api": "yarn workspace @campaign-manager/api dev",
+    "dev:web": "yarn workspace @campaign-manager/web dev",
+    "storybook": "yarn workspace @campaign-manager/ui storybook",
+    "seed": "yarn workspace @campaign-manager/api seed"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "yarn": ">=1.22.0 <2"
+  },
+  "packageManager": "yarn@1.22.22"
+}

@@ -133,33 +133,39 @@ See `docs/work-plan.md` §5 for the rationale on why these three.
 
 > Updated as the build progresses. Last updated: 2026-04-26.
 
-### What I delegated
+### What I delegated (already done)
 
-- **Designing the UI library**: wrote a structured design brief (`docs/ui-design-prompt.md`), let Claude generate HTML mockups, then implemented the 14 components in `packages/ui` against those mockups. Storybook was used for fast component-by-component iteration.
-- **Boilerplate**: Sequelize models from SQL DDL, Express middleware (CORS, error handler, validation wrapper), RTK Query slice scaffolding, Redux store setup
-- **Planning**: tier-based work plan with risk analysis, time budget, and acceptance criteria
-- **Async send simulator and the `transformResponse` adapter** between BE wire format and UI lib `Campaign` type
+- **Designing the UI library** — wrote a structured design brief (`docs/ui-design-prompt.md`), let Claude generate HTML mockups, then implemented the 14 components in `packages/ui` against those mockups. Storybook drove component-by-component iteration.
+- **Plan expansion (solo → team mode)** — ran `/ralplan` (Architect + Critic consensus loop with iterate/approve gates) over the v1 solo plan. Rev2 added the 2-stream BE/FE DAG, RACI matrix, and §6 API contract; rev3 applied iteration-2 consensus fixes (canonical "~2h mark (sync pt 2)" wording across the doc, T1.6 fixture-capture workflow, T2.3 dependency loosening, DoD item 7 on fixture-regen).
+- **Repo bootstrap (T1.1)** — root `package.json` with `packages/*` workspace glob, `tsconfig.base.json` mirroring the UI lib's compiler options (no `include`/`exclude` so each workspace owns its scope), `.editorconfig`, and `.env.example` derived from work-plan §6 (API contract) and §7 (MSW switches). `packageManager` pinned to `yarn@1.22.22`.
+
+### What I plan to delegate
+
+- **Boilerplate** — Sequelize models from the Appendix-A DDL, Express middleware (CORS, error handler, zod-validation wrapper), RTK Query slice scaffolding, Redux store setup
+- **Async send simulator** (`draft → sending → sent | failed`) and the **`transformResponse` adapter** between BE wire format and the UI lib `Campaign` type
 
 ### Real prompts used
 
-1. **(Planning)** "Analyze this challenge spec and use /plan with ultrathink to break down the work tasks. Time budget 4–8h. Optimize for ship-early — tier T1 must be standalone-shippable."
+1. **(Planning, v1 → team-mode)** `/oh-my-claudecode:ralplan review docs/work-plan.md, make it detailed enough to work with a team` — drove rev2 + rev3 through the Architect + Critic iterate/approve loop.
 2. **(UI design)** Full prompt at `docs/ui-design-prompt.md` — covers design language (Resend × Linear vibe), 4 screens, components to gallery, edge cases, and "do NOT" list.
-3. **(Implementation)** "Implement async send simulator: mark campaign 'sending', then with `setImmediate` iterate recipients with 90/10 sent/failed random. Campaign goes 'sent' if any succeed else 'failed'. Use one transaction per recipient."
+3. **(Async send, planned)** "Implement async send simulator: mark campaign 'sending', then with `setImmediate` iterate recipients with 90/10 sent/failed random. Campaign goes 'sent' if any succeed else 'failed'. Use one transaction per recipient."
 
 ### Where Claude Code was wrong / needed correction
 
-- **First send-simulator draft used `setTimeout(0)` inside a loop** → created N concurrent transactions instead of sequential. Fixed by `for…of` with `await`.
-- **Initial UI mockup was too airy** (Mailchimp-like) — refined with "reduce density to Linear-style row heights" — needed two design iterations before settling on the final tokens.
-- **Stats SQL returned `COUNT(*)` as a JS string** — Postgres bigint serialization quirk. Cast `CAST(COUNT(*) AS INTEGER)` and a unit test now guards it.
-- **AI suggested storing JWT in `localStorage`** — overrode for memory-only Redux storage; XSS risk wasn't worth the convenience even though the spec allowed it.
+- **Misleading commit message** — an earlier session's `chore: bootstrap monorepo with .gitignore` commit only added `.gitignore`; no root `package.json` or `tsconfig.base.json` ever landed. Caught at the start of T1.1 by inspecting `packages/` and the repo root against the work plan's expected bootstrap state — *commit messages are a claim, the working tree is the truth*.
+- **First send-simulator draft used `setTimeout(0)` inside a loop** → would have created N concurrent transactions instead of sequential. Fix locked into `CLAUDE.md` hard rule #3 (`for…of` with `await`, plus `UPDATE … WHERE id = $1 AND status IN (...)` with rowcount guard) before any send code is written.
+- **Initial UI mockup was too airy** (Mailchimp-like) — refined with "reduce density to Linear-style row heights"; settled the design tokens after two iterations.
+- **Stats SQL would have returned `COUNT(*)` as a JS string** — Postgres `bigint` serialization quirk. Locked in `CLAUDE.md` hard rule #5 (`CAST(COUNT(*) AS INTEGER)`) and reserved test slot 3 (`stats-aggregation.test.ts`, work-plan §14) to guard it.
+- **AI suggested storing JWT in `localStorage`** — overrode for memory-only Redux storage; XSS risk isn't worth the convenience even though the spec allows either. Locked in `CLAUDE.md` hard rule #4.
+- **AI suggested `packages/shared`** for shared view types — dropped after recognizing `@campaign-manager/ui` already exports `Campaign` / `CampaignStatus` (work-plan decision D15). Avoids two competing sources of truth.
 
 ### What I did NOT let Claude Code do
 
-- **Final business-rule verification** — manually walked through state transitions before declaring done
-- **Test case selection** — chose three tests that catch the highest-risk regressions, not just whatever was convenient
-- **README authorship** — wrote this section by hand to give an honest account of AI involvement
-- **Production secrets/config** — `.env.example` placeholders only; never asked AI to fill real values
-- **Final monorepo shape** — AI initially suggested `packages/shared`; I dropped it after seeing the UI lib already exports the view types (avoid duplicate truth)
+- **Final business-rule verification** — I'll manually walk every state transition before declaring done; AI can suggest, only I can sign off.
+- **Test case selection** — I chose the three tests in §14 of the plan because they catch the highest-risk regressions (edit-rule bypass, double-send race, stats type drift), not whatever was easy to write.
+- **README authorship** — this section is written by hand. Each "delegated" item is verifiable in `git log`; each correction is tied to a hard rule a reviewer can grep for. *No fabricated prompts.*
+- **Production secrets/config** — `.env.example` ships placeholders only (`replace-me-with-a-32-char-random-secret`); no real credentials touched the prompt.
+- **Final monorepo shape** — AI initially suggested `packages/shared`; dropped (see correction above).
 
 ---
 
