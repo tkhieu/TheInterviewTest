@@ -138,11 +138,13 @@ See `docs/work-plan.md` §5 for the rationale on why these three.
 - **Designing the UI library** — wrote a structured design brief (`docs/ui-design-prompt.md`), let Claude generate HTML mockups, then implemented the 14 components in `packages/ui` against those mockups. Storybook drove component-by-component iteration.
 - **Plan expansion (solo → team mode)** — ran `/ralplan` (Architect + Critic consensus loop with iterate/approve gates) over the v1 solo plan. Rev2 added the 2-stream BE/FE DAG, RACI matrix, and §6 API contract; rev3 applied iteration-2 consensus fixes (canonical "~2h mark (sync pt 2)" wording across the doc, T1.6 fixture-capture workflow, T2.3 dependency loosening, DoD item 7 on fixture-regen).
 - **Repo bootstrap (T1.1)** — root `package.json` with `packages/*` workspace glob, `tsconfig.base.json` mirroring the UI lib's compiler options (no `include`/`exclude` so each workspace owns its scope), `.editorconfig`, and `.env.example` derived from work-plan §6 (API contract) and §7 (MSW switches). `packageManager` pinned to `yarn@1.22.22`.
+- **DB + Docker + migrations (T1.2)** — `packages/api` scaffolded with Express + Sequelize + zod env-validation; tiny custom SQL migration runner (`packages/api/src/db/migrate.ts`, ~30 lines) tracks applied files in a `schema_migrations` table and applies each `.sql` file in a single transaction; `001_init.sql` is verbatim from work-plan Appendix A plus `CREATE EXTENSION pgcrypto` for `gen_random_uuid()`. Dockerfile drops privileges to the unprivileged `node` user (uid 1000) — caught by the Semgrep hook on first draft. `docker-compose.yml` boots Postgres 16 + the API with a Postgres `pg_isready` healthcheck gating `api.depends_on`.
 
 ### What I plan to delegate
 
-- **Boilerplate** — Sequelize models from the Appendix-A DDL, Express middleware (CORS, error handler, zod-validation wrapper), RTK Query slice scaffolding, Redux store setup
+- **API endpoints** (T1.3, T1.4, T2.1, T2.2) — Sequelize models from the Appendix-A DDL, JWT auth middleware, REST CRUD, scheduling and the async-send transition machine
 - **Async send simulator** (`draft → sending → sent | failed`) and the **`transformResponse` adapter** between BE wire format and the UI lib `Campaign` type
+- **FE setup** (T1.0, T1.5, T1.6) — Vite + RTK Query store, MSW mock-first scaffolding, the contract-conformance test that validates MSW responses against a real-BE fixture
 
 ### Real prompts used
 
