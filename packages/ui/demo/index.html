@@ -1,0 +1,843 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=1280" />
+<title>@campaign-manager/ui — Demo Gallery</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script>
+  tailwind.config = {
+    darkMode: ['class', '[data-theme="dark"]'],
+    theme: {
+      extend: {
+        fontFamily: { sans: ['Inter','ui-sans-serif','system-ui'], mono: ['"JetBrains Mono"','ui-monospace','monospace'] },
+        colors: {
+          bg: 'rgb(var(--cm-bg) / <alpha-value>)',
+          surface: 'rgb(var(--cm-surface) / <alpha-value>)',
+          'surface-2': 'rgb(var(--cm-surface-2) / <alpha-value>)',
+          border: 'rgb(var(--cm-border) / <alpha-value>)',
+          ring: 'rgb(var(--cm-ring) / <alpha-value>)',
+          fg: 'rgb(var(--cm-fg) / <alpha-value>)',
+          'fg-muted': 'rgb(var(--cm-fg-muted) / <alpha-value>)',
+          'fg-subtle': 'rgb(var(--cm-fg-subtle) / <alpha-value>)',
+          accent: 'rgb(var(--cm-accent) / <alpha-value>)',
+          'accent-fg': 'rgb(var(--cm-accent-fg) / <alpha-value>)',
+          'status-draft': 'rgb(var(--cm-draft) / <alpha-value>)',
+          'status-scheduled': 'rgb(var(--cm-scheduled) / <alpha-value>)',
+          'status-sending': 'rgb(var(--cm-sending) / <alpha-value>)',
+          'status-sent': 'rgb(var(--cm-sent) / <alpha-value>)',
+          'status-failed': 'rgb(var(--cm-failed) / <alpha-value>)',
+        },
+        keyframes: {
+          'soft-pulse': { '0%,100%': { opacity:'1', transform:'scale(1)' }, '50%': { opacity:'.55', transform:'scale(.85)' } },
+        },
+        animation: { 'soft-pulse': 'soft-pulse 1.4s ease-in-out infinite' },
+        boxShadow: {
+          soft: '0 1px 2px 0 rgb(15 23 42 / 0.04), 0 1px 3px 0 rgb(15 23 42 / 0.06)',
+          pop: '0 6px 16px -6px rgb(15 23 42 / 0.12), 0 2px 4px -2px rgb(15 23 42 / 0.06)',
+        },
+      },
+    },
+  };
+</script>
+<style>
+:root, [data-theme="light"] {
+  --cm-bg: 255 255 255; --cm-surface: 255 255 255; --cm-surface-2: 248 250 252;
+  --cm-border: 226 232 240; --cm-ring: 79 70 229;
+  --cm-fg: 15 23 42; --cm-fg-muted: 71 85 105; --cm-fg-subtle: 100 116 139;
+  --cm-accent: 79 70 229; --cm-accent-fg: 255 255 255;
+  --cm-draft: 100 116 139; --cm-scheduled: 37 99 235; --cm-sending: 245 158 11; --cm-sent: 5 150 105; --cm-failed: 244 63 94;
+}
+[data-theme="dark"] {
+  --cm-bg: 9 9 11; --cm-surface: 24 24 27; --cm-surface-2: 39 39 42;
+  --cm-border: 39 39 42; --cm-ring: 129 140 248;
+  --cm-fg: 244 244 245; --cm-fg-muted: 161 161 170; --cm-fg-subtle: 113 113 122;
+  --cm-accent: 99 102 241; --cm-accent-fg: 255 255 255;
+  --cm-draft: 161 161 170; --cm-scheduled: 96 165 250; --cm-sending: 251 191 36; --cm-sent: 52 211 153; --cm-failed: 251 113 133;
+}
+html, body { font-family: Inter, ui-sans-serif, system-ui, sans-serif; -webkit-font-smoothing: antialiased; background: rgb(var(--cm-bg)); color: rgb(var(--cm-fg)); }
+.tt { position: relative; }
+.tt:hover .tt-body, .tt:focus-within .tt-body { opacity: 1; transform: translate(-50%, -4px); pointer-events: auto; }
+.tt-body { position: absolute; left: 50%; bottom: 100%; transform: translate(-50%, 0); background: rgb(var(--cm-fg)); color: rgb(var(--cm-bg)); font-size: 11.5px; padding: 6px 8px; border-radius: 6px; white-space: nowrap; opacity: 0; transition: all 120ms ease; pointer-events: none; box-shadow: 0 4px 12px rgb(15 23 42/.18); z-index: 50; }
+.tt-body::after { content: ""; position: absolute; left: 50%; top: 100%; transform: translateX(-50%); border: 4px solid transparent; border-top-color: rgb(var(--cm-fg)); }
+details > summary { list-style: none; cursor: pointer; }
+details > summary::-webkit-details-marker { display: none; }
+details[open] .chev { transform: rotate(180deg); }
+.chev { transition: transform 150ms ease; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.spin { animation: spin 0.8s linear infinite; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<!-- Inline icons (subset of lucide for the demo) -->
+<script type="text/babel" data-presets="env,react">
+const Icon = ({ d, size = 16, className = "", strokeWidth = 2, children }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" className={className}>
+    {children || <path d={d}/>}
+  </svg>
+);
+const I = {
+  Send:        (p) => <Icon {...p}><path d="M22 2 11 13"/><path d="M22 2 15 22 11 13 2 9z"/></Icon>,
+  Plus:        (p) => <Icon {...p}><path d="M12 5v14"/><path d="M5 12h14"/></Icon>,
+  Trash:       (p) => <Icon {...p}><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></Icon>,
+  Calendar:    (p) => <Icon {...p}><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/><path d="M12 14v4"/><path d="M10 16h4"/></Icon>,
+  Mail:        (p) => <Icon {...p}><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></Icon>,
+  MailPlus:    (p) => <Icon {...p}><path d="M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8"/><path d="m22 7-10 5L2 7"/><path d="M19 16v6"/><path d="M16 19h6"/></Icon>,
+  MailOpen:    (p) => <Icon {...p}><path d="M21 8a2 2 0 0 0-1-1.7l-7.5-4.7a2 2 0 0 0-2 0L3 6.3A2 2 0 0 0 2 8v11a2 2 0 0 0 2 2h15a2 2 0 0 0 2-2z"/><path d="m22 8-9.5 5.7a2 2 0 0 1-2 0L2 8"/></Icon>,
+  Search:      (p) => <Icon {...p}><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></Icon>,
+  Bell:        (p) => <Icon {...p}><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></Icon>,
+  ChevDown:    (p) => <Icon {...p}><path d="m6 9 6 6 6-6"/></Icon>,
+  ChevRight:   (p) => <Icon {...p}><path d="m9 18 6-6-6-6"/></Icon>,
+  ChevLeft:    (p) => <Icon {...p}><path d="m15 18-6-6 6-6"/></Icon>,
+  X:           (p) => <Icon {...p}><path d="M18 6 6 18"/><path d="m6 6 12 12"/></Icon>,
+  Alert:       (p) => <Icon {...p}><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></Icon>,
+  Info:        (p) => <Icon {...p}><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></Icon>,
+  Users:       (p) => <Icon {...p}><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></Icon>,
+  Check:       (p) => <Icon {...p}><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></Icon>,
+  AlertTri:    (p) => <Icon {...p}><path d="M21.7 18 13.7 4a2 2 0 0 0-3.4 0L2.3 18a2 2 0 0 0 1.7 3h16a2 2 0 0 0 1.7-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></Icon>,
+  More:        (p) => <Icon {...p}><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></Icon>,
+  Pencil:      (p) => <Icon {...p}><path d="M21.2 5.9a2.4 2.4 0 0 0-3.4-3.4L3 17.4V21h3.6z"/><path d="m15 5 4 4"/></Icon>,
+  Copy:        (p) => <Icon {...p}><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></Icon>,
+  Activity:    (p) => <Icon {...p}><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></Icon>,
+  Sun:         (p) => <Icon {...p}><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></Icon>,
+  Moon:        (p) => <Icon {...p}><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></Icon>,
+  Loader:      (p) => <Icon {...p} className={"spin " + (p.className||"")}><path d="M21 12a9 9 0 1 1-6.2-8.55"/></Icon>,
+  Inbox:       (p) => <Icon {...p}><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.5 5.7 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.5-6.3A2 2 0 0 0 16.8 4H7.2a2 2 0 0 0-1.7 1.7Z"/></Icon>,
+  FileText:    (p) => <Icon {...p}><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></Icon>,
+  Clock:       (p) => <Icon {...p}><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></Icon>,
+  Ban:         (p) => <Icon {...p}><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></Icon>,
+};
+window.I = I;
+</script>
+
+<!-- Inline component library (mirrors src/components, simplified for browser demo) -->
+<script type="text/babel" data-presets="env,react">
+const { useState, useRef, useEffect, useId, useMemo, forwardRef } = React;
+const cn = (...args) => args.filter(Boolean).join(' ');
+window.cn = cn;
+
+// ---------- StatusBadge ----------
+const STATUS_STYLES = {
+  draft:     { pill: 'bg-slate-100 text-slate-700 dark:bg-zinc-800 dark:text-zinc-300', dot: 'bg-status-draft', label: 'Draft' },
+  scheduled: { pill: 'bg-blue-50 text-blue-700 dark:bg-blue-950/50 dark:text-blue-300', dot: 'bg-status-scheduled', label: 'Scheduled' },
+  sending:   { pill: 'bg-amber-50 text-amber-700 dark:bg-amber-950/50 dark:text-amber-300', dot: 'bg-status-sending animate-soft-pulse', label: 'Sending' },
+  sent:      { pill: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300', dot: 'bg-status-sent', label: 'Sent' },
+  failed:    { pill: 'bg-rose-50 text-rose-700 dark:bg-rose-950/50 dark:text-rose-300', dot: 'bg-status-failed', label: 'Failed' },
+};
+const StatusBadge = ({ status, label, className }) => {
+  const s = STATUS_STYLES[status];
+  return (
+    <span className={cn('inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium leading-5', s.pill, className)}>
+      <span className={cn('h-1.5 w-1.5 rounded-full', s.dot)} aria-hidden />
+      {label ?? s.label}
+    </span>
+  );
+};
+
+// ---------- ActionButton ----------
+const btnVariants = {
+  primary: 'bg-accent text-accent-fg shadow-soft hover:bg-indigo-700 dark:hover:bg-indigo-400 disabled:bg-surface-2 disabled:text-fg-subtle disabled:shadow-none',
+  secondary: 'bg-surface text-fg border border-border hover:bg-surface-2 disabled:text-fg-subtle',
+  destructive: 'bg-surface text-rose-700 border border-rose-200 hover:bg-rose-50 dark:bg-transparent dark:text-rose-400 dark:border-rose-900/50 dark:hover:bg-rose-950/30',
+  ghost: 'bg-transparent text-fg hover:bg-surface-2',
+};
+const btnSizes = { sm: 'h-8 px-2.5 text-[12.5px]', md: 'h-9 px-3.5 text-sm', lg: 'h-10 px-4 text-sm', icon: 'h-9 w-9' };
+const ActionButton = ({ variant='primary', size='md', loading, disabled, iconLeft, iconRight, children, className, ...props }) => (
+  <button
+    className={cn('inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-md font-medium transition-all duration-150 hover:-translate-y-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 disabled:cursor-not-allowed disabled:hover:translate-y-0',
+      btnVariants[variant], btnSizes[size], className)}
+    disabled={disabled || loading}
+    aria-busy={loading || undefined}
+    {...props}
+  >
+    {loading ? <I.Loader size={14}/> : iconLeft}
+    {children}
+    {!loading && iconRight}
+  </button>
+);
+
+// ---------- ProgressBar ----------
+const ProgressBar = ({ label, value, total, tone='accent', helper, size='md', showCount=true, className }) => {
+  const safeTotal = Math.max(total, 0);
+  const safeValue = Math.min(Math.max(value, 0), safeTotal);
+  const pct = safeTotal === 0 ? 0 : Math.round((safeValue / safeTotal) * 100);
+  const heights = { sm: 'h-1.5', md: 'h-2', lg: 'h-2.5' };
+  const tones = { accent: 'bg-accent', success: 'bg-status-sent', warning: 'bg-status-sending', danger: 'bg-status-failed' };
+  return (
+    <div className={cn('w-full', className)}>
+      {(label !== undefined || showCount) && (
+        <div className="flex items-baseline justify-between mb-1.5">
+          {label !== undefined && <div className="text-[13px] text-fg">{label}</div>}
+          {showCount && (
+            <div className="text-[12px] text-fg-subtle tabular-nums">
+              <span className="font-medium text-fg">{pct}%</span>
+              <span> · {safeValue.toLocaleString()} / {safeTotal.toLocaleString()}</span>
+            </div>
+          )}
+        </div>
+      )}
+      <div className={cn('relative w-full overflow-hidden rounded-full bg-surface-2', heights[size])}>
+        <div className={cn('h-full transition-[width] duration-500 ease-out', tones[tone])} style={{ width: `${pct}%` }} />
+      </div>
+      {helper && <div className="text-[12px] text-fg-subtle mt-1.5">{helper}</div>}
+    </div>
+  );
+};
+
+// ---------- EmptyState ----------
+const EmptyState = ({ icon: Ic = I.Inbox, title, description, cta, action, compact, className }) => (
+  <div className={cn('flex flex-col items-center text-center rounded-lg border border-border bg-surface', compact ? 'p-6' : 'p-12', className)}>
+    <div className={cn('rounded-full bg-surface-2 flex items-center justify-center mb-3', compact ? 'h-10 w-10' : 'h-14 w-14')}>
+      <Ic size={compact ? 20 : 24} className="text-fg-subtle"/>
+    </div>
+    <div className={cn('font-semibold text-fg', compact ? 'text-sm' : 'text-[15px]')}>{title}</div>
+    {description && <div className={cn('text-fg-subtle mt-1 max-w-sm', compact ? 'text-xs' : 'text-[13px]')}>{description}</div>}
+    {action ? <div className="mt-4">{action}</div> :
+     cta ? <div className="mt-5"><ActionButton onClick={cta.onClick} iconLeft={cta.iconLeft}>{cta.label}</ActionButton></div> : null}
+  </div>
+);
+
+// ---------- Input / Textarea ----------
+const Input = ({ label, error, helper, counter, leftSlot, className, id, ...props }) => {
+  const reactId = useId();
+  const fieldId = id ?? reactId;
+  return (
+    <div className="w-full">
+      {(label || counter) && (
+        <div className="flex items-baseline justify-between">
+          {label && <label htmlFor={fieldId} className="text-[13px] font-medium text-fg block mb-1.5">{label}</label>}
+          {counter && <span className={cn('text-[12px] tabular-nums', error ? 'text-rose-600' : 'text-fg-subtle')}>{counter}</span>}
+        </div>
+      )}
+      <div className="relative">
+        {leftSlot && <div className="absolute left-3 top-1/2 -translate-y-1/2 text-fg-subtle pointer-events-none">{leftSlot}</div>}
+        <input
+          id={fieldId}
+          aria-invalid={error || undefined}
+          className={cn('w-full h-9 px-3 text-sm bg-surface text-fg border border-border rounded-md transition-colors placeholder:text-fg-subtle focus:outline-none focus:border-ring focus:ring-2 focus:ring-ring/20 disabled:opacity-60',
+            leftSlot && 'pl-9',
+            error && 'border-rose-500 focus:border-rose-500 focus:ring-rose-500/20',
+            className)}
+          {...props}
+        />
+      </div>
+      {helper && (
+        <div className={cn('mt-1.5 text-[12px] flex items-start gap-1.5', error ? 'text-rose-600' : 'text-fg-subtle')}>
+          {error && <I.Alert size={14} className="mt-px shrink-0"/>}
+          <span>{helper}</span>
+        </div>
+      )}
+    </div>
+  );
+};
+const Textarea = ({ label, error, helper, mono, className, id, ...props }) => {
+  const reactId = useId();
+  const fieldId = id ?? reactId;
+  return (
+    <div className="w-full">
+      {label && <label htmlFor={fieldId} className="text-[13px] font-medium text-fg block mb-1.5">{label}</label>}
+      <textarea
+        id={fieldId}
+        className={cn('w-full px-3 py-2.5 text-sm bg-surface text-fg border border-border rounded-md leading-relaxed focus:outline-none focus:border-ring focus:ring-2 focus:ring-ring/20',
+          mono && 'font-mono text-[13px]',
+          error && 'border-rose-500 focus:border-rose-500 focus:ring-rose-500/20',
+          className)}
+        {...props}
+      />
+      {helper && <div className={cn('mt-1.5 text-[12px]', error ? 'text-rose-600' : 'text-fg-subtle')}>{helper}</div>}
+    </div>
+  );
+};
+
+// ---------- Chip ----------
+const Chip = ({ active, count, children, className, ...props }) => (
+  <button
+    type="button"
+    aria-pressed={active}
+    className={cn('inline-flex items-center gap-1.5 h-8 px-2.5 rounded-md border text-[13px] transition-colors',
+      active ? 'bg-fg text-bg border-fg' : 'bg-surface text-fg-muted border-border hover:bg-surface-2',
+      className)}
+    {...props}
+  >
+    <span>{children}</span>
+    {count !== undefined && <span className={cn('tabular-nums text-[12px]', active ? 'text-bg/70' : 'text-fg-subtle')}>{count}</span>}
+  </button>
+);
+
+// ---------- StatCard ----------
+const buildPath = (series, w=120, h=28) => {
+  if (!series.length) return { line:'', area:'' };
+  const min = Math.min(...series), max = Math.max(...series), range = max - min || 1;
+  const step = w / Math.max(series.length-1, 1);
+  const pts = series.map((v,i) => [i*step, h-2 - ((v-min)/range)*(h-4)]);
+  const line = pts.map(([x,y],i) => `${i===0?'M':'L'}${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
+  const area = `M${pts[0][0]},${h} ` + pts.map(([x,y])=>`L${x.toFixed(1)},${y.toFixed(1)}`).join(' ') + ` L${w},${h} Z`;
+  return { line, area };
+};
+const StatCard = ({ label, value, icon: Ic, iconClassName, series, seriesColor='rgb(var(--cm-accent))', footer, className }) => {
+  const { line, area } = useMemo(() => buildPath(series ?? []), [series]);
+  return (
+    <div className={cn('border border-border rounded-lg p-5 bg-surface shadow-soft', className)}>
+      <div className="flex items-center justify-between">
+        <div className="text-[12px] uppercase tracking-wider text-fg-subtle font-medium">{label}</div>
+        {Ic && <Ic size={16} className={cn('text-fg-subtle', iconClassName)}/>}
+      </div>
+      <div className="text-[30px] font-semibold tracking-[-0.022em] tabular-nums mt-1 text-fg leading-tight">{value}</div>
+      {series && series.length > 1 && (
+        <svg className="mt-2 w-full" viewBox="0 0 120 28" preserveAspectRatio="none" height="28">
+          <path d={area} fill={seriesColor} fillOpacity={0.08}/>
+          <path d={line} fill="none" stroke={seriesColor} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      )}
+      {footer && <div className="text-[11.5px] text-fg-subtle mt-1">{footer}</div>}
+    </div>
+  );
+};
+
+// ---------- Tooltip (CSS-only for demo; real lib uses Radix) ----------
+const Tooltip = ({ content, children }) => (
+  <span className="tt inline-flex">
+    {children}
+    <span className="tt-body">{content}</span>
+  </span>
+);
+
+// ---------- Accordion (CSS <details> for demo; real lib uses Radix) ----------
+const Accordion = ({ trigger, children }) => (
+  <details className="border border-border rounded-lg bg-surface shadow-soft overflow-hidden">
+    <summary className="flex items-center justify-between px-5 py-4 hover:bg-surface-2">
+      <div className="flex items-center gap-2.5"><I.FileText size={16} className="text-fg-subtle"/><span className="text-[14px] font-medium text-fg">{trigger}</span></div>
+      <I.ChevDown size={16} className="chev text-fg-subtle"/>
+    </summary>
+    <div className="px-5 pb-5 pt-0 border-t border-border">{children}</div>
+  </details>
+);
+
+// ---------- Avatar ----------
+const initials = (name) => name.split(/\s+/).filter(Boolean).slice(0,2).map(p => p[0].toUpperCase()).join('');
+const Avatar = ({ name, src, size='md', className }) => {
+  const [errored, setErrored] = useState(false);
+  const sizes = { sm: 'h-6 w-6 text-[10px]', md: 'h-7 w-7 text-[12px]', lg: 'h-9 w-9 text-[13px]' };
+  return (
+    <div role="img" aria-label={name} className={cn('inline-flex items-center justify-center rounded-full font-semibold overflow-hidden bg-indigo-100 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-300', sizes[size], className)}>
+      {src && !errored ? <img src={src} alt="" className="h-full w-full object-cover" onError={()=>setErrored(true)}/> : initials(name)}
+    </div>
+  );
+};
+
+// ---------- TopBar ----------
+const TopBar = ({ appName='Campaign Manager', nav=[], user, onSearchClick, onNotificationsClick, className }) => (
+  <div className={cn('border-b border-border bg-surface', className)}>
+    <div className="h-14 px-8 flex items-center justify-between">
+      <div className="flex items-center gap-8">
+        <div className="flex items-center gap-2.5">
+          <div className="h-6 w-6 rounded bg-fg flex items-center justify-center"><div className="h-2 w-2 rounded-[2px] bg-bg"/></div>
+          <span className="font-semibold text-[14.5px] tracking-[-0.011em] text-fg">{appName}</span>
+        </div>
+        <nav className="flex items-center gap-1">
+          {nav.map(item => (
+            <a key={item.label} href={item.href ?? '#'}
+              className={cn('px-3 h-8 inline-flex items-center rounded-md text-[13.5px] transition-colors',
+                item.active ? 'bg-surface-2 text-fg font-medium' : 'text-fg-muted hover:bg-surface-2')}
+              aria-current={item.active ? 'page' : undefined}
+            >{item.label}</a>
+          ))}
+        </nav>
+      </div>
+      <div className="flex items-center gap-3">
+        {onSearchClick && <button type="button" onClick={onSearchClick} className="h-8 w-8 inline-flex items-center justify-center rounded-md text-fg-subtle hover:bg-surface-2" aria-label="Search"><I.Search size={16}/></button>}
+        {onNotificationsClick && <button type="button" onClick={onNotificationsClick} className="h-8 w-8 inline-flex items-center justify-center rounded-md text-fg-subtle hover:bg-surface-2" aria-label="Notifications"><I.Bell size={16}/></button>}
+        {user && (
+          <>
+            <div className="h-7 w-px bg-border"/>
+            <button type="button" className="flex items-center gap-2 h-8 pl-1 pr-2 rounded-md hover:bg-surface-2">
+              <Avatar name={user.name} src={user.src} size="md"/>
+              <span className="text-[13px] font-medium text-fg">{user.name}</span>
+              <I.ChevDown size={14} className="text-fg-subtle"/>
+            </button>
+          </>
+        )}
+      </div>
+    </div>
+  </div>
+);
+
+// ---------- RecipientTagInput ----------
+const isEmail = (s) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
+const RecipientTagInput = ({ value, onChange, placeholder='Paste more emails…', showCounter=true, className }) => {
+  const [draft, setDraft] = useState('');
+  const inputRef = useRef(null);
+  const validate = isEmail;
+  const commit = (raw) => {
+    const items = raw.split(/[\s,;]+/).map(s => s.trim()).filter(Boolean);
+    if (!items.length) return;
+    onChange(Array.from(new Set([...value, ...items])));
+    setDraft('');
+  };
+  const remove = (i) => onChange(value.filter((_, idx) => idx !== i));
+  const onKey = (e) => {
+    if (e.key === 'Enter' || e.key === ',' || e.key === ';') { e.preventDefault(); if (draft.trim()) commit(draft); }
+    else if (e.key === 'Backspace' && draft === '' && value.length) { e.preventDefault(); remove(value.length - 1); }
+  };
+  const onPaste = (e) => {
+    const text = e.clipboardData.getData('text');
+    if (/[\s,;]/.test(text)) { e.preventDefault(); commit(text); }
+  };
+  const valid = value.filter(validate).length;
+  const invalid = value.length - valid;
+  return (
+    <div className={className}>
+      <div
+        className="border border-border rounded-md bg-surface px-2 py-1.5 min-h-[88px] flex flex-wrap gap-1.5 items-start cursor-text focus-within:border-ring focus-within:ring-2 focus-within:ring-ring/20"
+        onClick={() => inputRef.current?.focus()}
+      >
+        {value.map((em, i) => {
+          const ok = validate(em);
+          return (
+            <span key={`${em}-${i}`} className={cn('inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[12.5px] leading-5',
+              ok ? 'bg-surface-2 text-fg' : 'bg-rose-50 text-rose-700 ring-1 ring-rose-200 dark:bg-rose-950/40 dark:ring-rose-900/40 dark:text-rose-300')}>
+              {!ok && <I.Alert size={12} className="shrink-0"/>}
+              <span className="max-w-[240px] truncate">{em}</span>
+              <button type="button" onClick={(e)=>{e.stopPropagation(); remove(i);}} className="text-fg-subtle hover:text-fg shrink-0" aria-label={`Remove ${em}`}><I.X size={12}/></button>
+            </span>
+          );
+        })}
+        <input ref={inputRef} value={draft} onChange={(e)=>setDraft(e.target.value)} onKeyDown={onKey} onPaste={onPaste} onBlur={()=>draft.trim()&&commit(draft)} placeholder={value.length===0 ? placeholder : ''} className="flex-1 min-w-[120px] outline-none text-[13px] px-1.5 py-1 bg-transparent text-fg placeholder:text-fg-subtle"/>
+      </div>
+      {showCounter && (
+        <div className="mt-1.5 text-[12px] text-fg-subtle tabular-nums">
+          {valid} valid{invalid > 0 && <span className="text-rose-600"> · {invalid} invalid</span>}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ---------- CampaignTable ----------
+const CampaignTable = ({ campaigns, onRowClick, className }) => (
+  <div className={cn('border border-border rounded-lg overflow-hidden bg-surface shadow-soft', className)}>
+    <table className="w-full text-[13.5px]">
+      <thead>
+        <tr className="bg-surface-2 text-fg-subtle text-[12px] uppercase tracking-wider">
+          <th className="text-left font-medium px-4 py-2.5 w-[40%]">Campaign</th>
+          <th className="text-left font-medium px-4 py-2.5">Status</th>
+          <th className="text-right font-medium px-4 py-2.5">Recipients</th>
+          <th className="text-left font-medium px-4 py-2.5 w-[18%]">Sent rate</th>
+          <th className="text-left font-medium px-4 py-2.5">Created</th>
+          <th className="text-right font-medium px-4 py-2.5 w-12"/>
+        </tr>
+      </thead>
+      <tbody className="divide-y divide-border">
+        {campaigns.map((c) => {
+          const pct = Math.round(c.sentRate * 100);
+          return (
+            <tr key={c.id} className="h-14 transition-colors hover:bg-surface-2 cursor-pointer" onClick={()=>onRowClick?.(c)}>
+              <td className="px-4 align-middle">
+                <div className="font-medium text-fg truncate max-w-[420px]">{c.name}</div>
+                <div className="text-[12.5px] text-fg-subtle truncate max-w-[420px]">{c.subject}</div>
+              </td>
+              <td className="px-4 align-middle"><StatusBadge status={c.status}/></td>
+              <td className="px-4 align-middle text-right tabular-nums text-fg">
+                {c.recipients === 0 ? <span className="text-fg-subtle">—</span> : c.recipients.toLocaleString()}
+              </td>
+              <td className="px-4 align-middle">
+                {c.status === 'draft' ? <span className="text-fg-subtle">—</span> : (
+                  <div className="flex items-center gap-2">
+                    <div className="h-1.5 flex-1 rounded-full bg-surface-2 overflow-hidden">
+                      <div className="h-full bg-accent transition-[width] duration-500" style={{ width: `${pct}%` }}/>
+                    </div>
+                    <span className="tabular-nums text-[12px] text-fg-muted w-8 text-right">{pct}%</span>
+                  </div>
+                )}
+              </td>
+              <td className="px-4 align-middle text-fg-subtle">{c.created}</td>
+              <td className="px-4 align-middle text-right">
+                <button type="button" onClick={(e)=>e.stopPropagation()} aria-label="Row actions" className="h-7 w-7 inline-flex items-center justify-center rounded-md text-fg-subtle hover:bg-surface-2 hover:text-fg"><I.More size={16}/></button>
+              </td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  </div>
+);
+
+// ---------- Demo Page ----------
+const Section = ({ id, eyebrow, title, subtitle, children }) => (
+  <section id={id} className="border-b border-border">
+    <div className="max-w-[1280px] mx-auto px-8 py-12">
+      <div className="mb-6">
+        <div className="text-[11px] uppercase tracking-[0.08em] text-fg-subtle font-semibold mb-2">{eyebrow}</div>
+        <h2 className="text-2xl font-semibold tracking-[-0.022em]">{title}</h2>
+        {subtitle && <p className="text-sm text-fg-muted mt-1.5 max-w-2xl">{subtitle}</p>}
+      </div>
+      {children}
+    </div>
+  </section>
+);
+const Card = ({ title, snippet, children }) => (
+  <div className="bg-surface border border-border rounded-lg shadow-soft overflow-hidden">
+    <div className="px-5 py-3 border-b border-border flex items-center justify-between">
+      <div className="text-[13px] font-medium text-fg">{title}</div>
+      {snippet && <code className="text-[11px] font-mono text-fg-subtle">{snippet}</code>}
+    </div>
+    <div className="p-6">{children}</div>
+  </div>
+);
+
+const SAMPLE_CAMPAIGNS = [
+  { id:'1', name:'Spring Launch — Wave 2', subject:"Don't miss this — your early access begins tomorrow at 9am PT", status:'sending', recipients:547, sentRate:0.92, created:'2 min ago' },
+  { id:'2', name:'Welcome series · Day 1 of 5 (long-tail customer onboarding flow auto-send)', subject:"Welcome to the team, {{first_name}}", status:'sent', recipients:1284, sentRate:1, created:'Yesterday' },
+  { id:'3', name:'Q2 changelog roundup', subject:'What shipped this quarter — 14 new features for power users', status:'sent', recipients:4203, sentRate:1, created:'2 days ago' },
+  { id:'4', name:'Win-back · 90-day inactives', subject:"We've been busy — here's what you missed", status:'scheduled', recipients:612, sentRate:0, created:'Apr 24' },
+  { id:'5', name:'Pricing update notice', subject:'An important update to your plan, effective May 1', status:'draft', recipients:0, sentRate:0, created:'Apr 23' },
+  { id:'6', name:'Beta invite · Tagging v2', subject:"You're in — early access to recipient tagging", status:'scheduled', recipients:88, sentRate:0, created:'Apr 22' },
+];
+
+function App() {
+  const [theme, setTheme] = useState('light');
+  useEffect(() => { document.documentElement.setAttribute('data-theme', theme); }, [theme]);
+
+  // Chip filter state
+  const [filter, setFilter] = useState('all');
+  const tableData = useMemo(() => {
+    if (filter === 'all') return SAMPLE_CAMPAIGNS;
+    return SAMPLE_CAMPAIGNS.filter(c => c.status === filter);
+  }, [filter]);
+
+  // Tag input state
+  const [emails, setEmails] = useState([
+    'amelia.chen@northwind.io',
+    'marco.del-rosario@helmstad.com',
+    'this-is-not-an-email',
+    'priya.shah@bluewren.dev',
+    'linnea.holm@kvasir-labs.se',
+  ]);
+
+  // Loading button demo
+  const [loading, setLoading] = useState(false);
+  const fakeSubmit = () => { setLoading(true); setTimeout(()=>setLoading(false), 1800); };
+
+  const components = [
+    { id: 'statusbadge', label: 'StatusBadge' },
+    { id: 'actionbutton', label: 'ActionButton' },
+    { id: 'progressbar', label: 'ProgressBar' },
+    { id: 'emptystate', label: 'EmptyState' },
+    { id: 'input', label: 'Input · Textarea' },
+    { id: 'chip', label: 'Chip' },
+    { id: 'statcard', label: 'StatCard' },
+    { id: 'tooltip', label: 'Tooltip' },
+    { id: 'accordion', label: 'Accordion' },
+    { id: 'tag', label: 'RecipientTagInput' },
+    { id: 'avatar', label: 'Avatar' },
+    { id: 'topbar', label: 'TopBar' },
+    { id: 'table', label: 'CampaignTable' },
+  ];
+
+  return (
+    <div className="min-h-screen bg-bg text-fg">
+      {/* Sticky doc header */}
+      <header className="sticky top-0 z-40 bg-bg/95 backdrop-blur border-b border-border">
+        <div className="max-w-[1280px] mx-auto px-8 h-14 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="h-6 w-6 rounded bg-fg flex items-center justify-center"><div className="h-2 w-2 rounded-[2px] bg-bg"/></div>
+            <span className="font-semibold tracking-[-0.011em]">@campaign-manager/ui</span>
+            <span className="text-fg-subtle">·</span>
+            <span className="text-sm text-fg-muted">v0.1.0 · Demo gallery</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <a href="#statusbadge" className="text-[12.5px] text-fg-muted hover:text-fg">Components</a>
+            <a href="#table" className="text-[12.5px] text-fg-muted hover:text-fg">Composites</a>
+            <button
+              type="button"
+              onClick={() => setTheme(t => t === 'light' ? 'dark' : 'light')}
+              className="h-8 px-2.5 rounded-md border border-border bg-surface hover:bg-surface-2 inline-flex items-center gap-1.5 text-[12.5px]"
+              aria-label="Toggle theme"
+            >
+              {theme === 'light' ? <I.Moon size={14}/> : <I.Sun size={14}/>}
+              <span>{theme === 'light' ? 'Dark' : 'Light'}</span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Hero */}
+      <section className="border-b border-border">
+        <div className="max-w-[1280px] mx-auto px-8 py-16 grid grid-cols-12 gap-8 items-start">
+          <div className="col-span-7">
+            <div className="text-[11px] uppercase tracking-[0.08em] text-fg-subtle font-semibold mb-3">Component library</div>
+            <h1 className="text-4xl font-semibold tracking-[-0.024em] leading-[1.1]">
+              Production-ready React building blocks for the Campaign Manager product.
+            </h1>
+            <p className="text-[15px] text-fg-muted mt-4 leading-relaxed max-w-xl">
+              13 components, all built shadcn-style: Tailwind + cn() + Radix primitives. Tokens drive a complete light/dark theme via <code className="font-mono text-[13px] bg-surface-2 px-1.5 py-0.5 rounded">data-theme</code>. Storybook included; this page is the live, no-install preview.
+            </p>
+            <div className="flex items-center gap-2 mt-6">
+              <ActionButton iconLeft={<I.Plus size={14}/>}>Browse components</ActionButton>
+              <ActionButton variant="secondary" iconLeft={<I.FileText size={14}/>}>Read README</ActionButton>
+            </div>
+            <div className="mt-8 flex flex-wrap gap-1.5">
+              {components.map(c => (
+                <a key={c.id} href={`#${c.id}`} className="inline-flex h-7 px-2.5 items-center rounded-md border border-border bg-surface text-[12px] text-fg-muted hover:bg-surface-2 hover:text-fg">{c.label}</a>
+              ))}
+            </div>
+          </div>
+          <div className="col-span-5">
+            <div className="border border-border rounded-lg bg-surface shadow-pop p-6 space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="text-[11px] uppercase tracking-wider font-semibold text-fg-subtle">Spring Launch — Wave 2</div>
+                <StatusBadge status="sending"/>
+              </div>
+              <div className="grid grid-cols-3 gap-3">
+                <div className="rounded-md border border-border p-3">
+                  <div className="text-[11px] uppercase text-fg-subtle">Sent</div>
+                  <div className="text-[20px] font-semibold tabular-nums">503</div>
+                </div>
+                <div className="rounded-md border border-border p-3">
+                  <div className="text-[11px] uppercase text-fg-subtle">Failed</div>
+                  <div className="text-[20px] font-semibold tabular-nums">3</div>
+                </div>
+                <div className="rounded-md border border-border p-3">
+                  <div className="text-[11px] uppercase text-fg-subtle">Opened</div>
+                  <div className="text-[20px] font-semibold tabular-nums">191</div>
+                </div>
+              </div>
+              <ProgressBar label="Send rate" value={503} total={547}/>
+              <ProgressBar label="Open rate" value={191} total={503}/>
+              <div className="flex gap-2 pt-1">
+                <ActionButton size="sm" iconLeft={<I.Activity size={14}/>}>View progress</ActionButton>
+                <ActionButton size="sm" variant="secondary" iconLeft={<I.Copy size={14}/>}>Duplicate</ActionButton>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* StatusBadge */}
+      <Section id="statusbadge" eyebrow="Primitive · 01" title="StatusBadge" subtitle="Campaign lifecycle pill — color + label always paired. The sending dot pulses to convey live activity.">
+        <div className="grid grid-cols-2 gap-5">
+          <Card title="Variants" snippet='<StatusBadge status="…" />'>
+            <div className="flex flex-wrap gap-2">
+              <StatusBadge status="draft"/>
+              <StatusBadge status="scheduled"/>
+              <StatusBadge status="sending"/>
+              <StatusBadge status="sent"/>
+              <StatusBadge status="failed"/>
+            </div>
+          </Card>
+          <Card title="Custom label" snippet='label="Pending review"'>
+            <div className="flex flex-wrap gap-2">
+              <StatusBadge status="draft" label="Pending review"/>
+              <StatusBadge status="failed" label="Bounced"/>
+              <StatusBadge status="scheduled" label="Queued for 9am"/>
+            </div>
+          </Card>
+        </div>
+      </Section>
+
+      {/* ActionButton */}
+      <Section id="actionbutton" eyebrow="Primitive · 02" title="ActionButton" subtitle="Primary / secondary / destructive / ghost. Loading state replaces the icon with a spinner and disables the button.">
+        <div className="grid grid-cols-2 gap-5">
+          <Card title="Variants" snippet='variant="primary | secondary | destructive | ghost"'>
+            <div className="flex flex-wrap gap-2">
+              <ActionButton iconLeft={<I.Send size={14}/>}>Send now</ActionButton>
+              <ActionButton variant="secondary" iconLeft={<I.Calendar size={14}/>}>Schedule</ActionButton>
+              <ActionButton variant="destructive" iconLeft={<I.Trash size={14}/>}>Delete</ActionButton>
+              <ActionButton variant="ghost">Cancel</ActionButton>
+              <ActionButton disabled iconLeft={<I.Ban size={14}/>}>Disabled</ActionButton>
+            </div>
+          </Card>
+          <Card title="Sizes + loading" snippet='size="sm | md | lg"  loading'>
+            <div className="flex flex-wrap items-end gap-2">
+              <ActionButton size="sm" iconLeft={<I.Plus size={12}/>}>sm</ActionButton>
+              <ActionButton size="md" iconLeft={<I.Plus size={14}/>}>md</ActionButton>
+              <ActionButton size="lg" iconLeft={<I.Plus size={14}/>}>lg</ActionButton>
+              <ActionButton variant="primary" loading={loading} onClick={fakeSubmit}>{loading ? 'Signing in…' : 'Click to load (1.8s)'}</ActionButton>
+            </div>
+          </Card>
+        </div>
+      </Section>
+
+      {/* ProgressBar */}
+      <Section id="progressbar" eyebrow="Primitive · 03" title="ProgressBar" subtitle="Labelled bar with percentage + ratio readout. Edge cases: 0% (just-queued) and 100% are visually distinct.">
+        <Card title="0 / 50 / 100% + tones" snippet='<ProgressBar label value total tone />'>
+          <div className="grid grid-cols-3 gap-6">
+            <ProgressBar label="Send rate" value={0} total={50} helper="Just queued — worker hasn't started."/>
+            <ProgressBar label="Send rate" value={25} total={50}/>
+            <ProgressBar label="Send rate" value={50} total={50} tone="success"/>
+            <ProgressBar label="Open rate" value={191} total={503}/>
+            <ProgressBar label="Bounce rate" value={3} total={547} tone="danger"/>
+            <ProgressBar label="Throughput" value={42} total={60} tone="warning"/>
+          </div>
+        </Card>
+      </Section>
+
+      {/* EmptyState */}
+      <Section id="emptystate" eyebrow="Primitive · 04" title="EmptyState" subtitle="Friendly icon-in-circle, headline, description, single CTA. Use the compact variant for inline contexts.">
+        <div className="grid grid-cols-2 gap-5">
+          <Card title="Default" snippet="<EmptyState icon title description cta />">
+            <EmptyState
+              icon={I.MailPlus}
+              title="No campaigns yet"
+              description="Draft your first email, choose recipients, and we'll handle the rest. Average setup time: under a minute."
+              cta={{ label: 'Create your first campaign', iconLeft: <I.Plus size={14}/> }}
+            />
+          </Card>
+          <Card title="Compact" snippet="compact">
+            <EmptyState compact icon={I.Inbox} title="No results" description="Try a different filter."
+              cta={{ label: 'Clear filters' }}
+            />
+          </Card>
+        </div>
+      </Section>
+
+      {/* Input */}
+      <Section id="input" eyebrow="Form · 05" title="Input · Textarea" subtitle="Form fields with label, helper, error and counter slots. Char-counter goes red on overflow.">
+        <div className="grid grid-cols-2 gap-5">
+          <Card title="Default + with-icon" snippet="<Input leftSlot={<Search/>} />">
+            <div className="space-y-4 max-w-md">
+              <Input label="Name" defaultValue="Spring Launch — Wave 2" helper="Internal name, recipients won't see this."/>
+              <Input placeholder="Search by name or subject" leftSlot={<I.Search size={14}/>}/>
+            </div>
+          </Card>
+          <Card title="Error + counter" snippet="error  counter='82 / 78'">
+            <div className="space-y-4 max-w-md">
+              <Input label="Subject" error counter="82 / 78"
+                defaultValue="Don't miss this — your early access to the Spring Launch begins tomorrow at 9am"
+                helper="Keep subject lines under 78 characters. Longer lines get truncated on most clients."
+              />
+              <Textarea label="Body" mono rows={5} defaultValue={"Hi {{first_name}},\n\nSpring Launch starts tomorrow at 9am PT…"} helper="Use {{first_name}} for personalization."/>
+            </div>
+          </Card>
+        </div>
+      </Section>
+
+      {/* Chip */}
+      <Section id="chip" eyebrow="Primitive · 06" title="Chip" subtitle="Filter chips, segmented-control style. Counts are muted; active is solid.">
+        <Card title="Filter group (live)" snippet="<Chip active count />">
+          <div className="flex flex-wrap items-center gap-1.5">
+            {[
+              { id:'all', label:'All', count: SAMPLE_CAMPAIGNS.length },
+              { id:'draft', label:'Draft', count: SAMPLE_CAMPAIGNS.filter(c=>c.status==='draft').length },
+              { id:'scheduled', label:'Scheduled', count: SAMPLE_CAMPAIGNS.filter(c=>c.status==='scheduled').length },
+              { id:'sending', label:'Sending', count: SAMPLE_CAMPAIGNS.filter(c=>c.status==='sending').length },
+              { id:'sent', label:'Sent', count: SAMPLE_CAMPAIGNS.filter(c=>c.status==='sent').length },
+            ].map(i => (
+              <Chip key={i.id} active={filter === i.id} count={i.count} onClick={()=>setFilter(i.id)}>{i.label}</Chip>
+            ))}
+            <span className="ml-3 text-[12px] text-fg-subtle">Filtering the table below ↓</span>
+          </div>
+        </Card>
+      </Section>
+
+      {/* StatCard */}
+      <Section id="statcard" eyebrow="Primitive · 07" title="StatCard" subtitle="Big number + Lucide icon + sparkline + footer. Use for the campaign detail's stats grid.">
+        <Card title="4-up grid" snippet="<StatCard label value icon series footer />">
+          <div className="grid grid-cols-4 gap-4">
+            <StatCard label="Total" value="547" icon={I.Users} series={[5,6,8,9,11,14,18,22,27,30,33,36]} footer="Recipients in segment"/>
+            <StatCard label="Sent" value={<>503 <span className="text-fg-subtle text-[14px] font-normal">/ 547</span></>} icon={I.Check} iconClassName="text-emerald-500" series={[10,12,14,18,22,30,38,44,50,56,60]} footer="+44 in last minute"/>
+            <StatCard label="Failed" value="3" icon={I.AlertTri} iconClassName="text-rose-500" seriesColor="rgb(244 63 94)" series={[1,1,2,2,2,3,3,3,3,3,3]} footer="2 bounce, 1 unsubscribed"/>
+            <StatCard label="Opened" value="191" icon={I.MailOpen} iconClassName="text-indigo-500" series={[2,5,12,28,52,80,110,140,160,178,191]} footer="38% open rate"/>
+          </div>
+        </Card>
+      </Section>
+
+      {/* Tooltip */}
+      <Section id="tooltip" eyebrow="Primitive · 08" title="Tooltip" subtitle="Use to surface error reasons, terse explanations, or keyboard shortcuts. Real lib uses Radix; this demo is CSS-only.">
+        <Card title="Hover the failed row" snippet="<Tooltip content=…>{children}</Tooltip>">
+          <div className="flex items-center gap-3">
+            <Tooltip content="SMTP 550 · mailbox unavailable">
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium leading-5 bg-rose-50 text-rose-700 dark:bg-rose-950/50 dark:text-rose-300">
+                <span className="h-1.5 w-1.5 rounded-full bg-status-failed"/>Failed
+                <I.Info size={12}/>
+              </span>
+            </Tooltip>
+            <Tooltip content="38% open rate · industry benchmark 31%">
+              <span className="text-[13px] text-fg-muted underline decoration-dotted underline-offset-4 cursor-help">Above benchmark</span>
+            </Tooltip>
+          </div>
+        </Card>
+      </Section>
+
+      {/* Accordion */}
+      <Section id="accordion" eyebrow="Primitive · 09" title="Accordion" subtitle="Collapsible body-preview panel. Real lib uses Radix's Accordion primitive.">
+        <Card title="Body preview" snippet="<Accordion><AccordionItem><AccordionTrigger/><AccordionContent/>…">
+          <Accordion trigger="Body preview · Don't miss this — your early access begins tomorrow at 9am">
+            <pre className="whitespace-pre-wrap font-sans text-[13.5px] leading-relaxed text-fg-muted mt-3">{`Hi {{first_name}},
+
+Spring Launch starts tomorrow at 9am PT — and as a top-100 customer, you get a 12-hour head start.
+
+→ Reserve early access`}</pre>
+          </Accordion>
+        </Card>
+      </Section>
+
+      {/* RecipientTagInput */}
+      <Section id="tag" eyebrow="Form · 10" title="RecipientTagInput" subtitle="Paste comma-, space- or newline-separated emails. Invalid entries pill in red. Backspace on empty input deletes the last tag.">
+        <Card title="Live demo" snippet="<RecipientTagInput value onChange validate />">
+          <div className="max-w-2xl">
+            <RecipientTagInput value={emails} onChange={setEmails}/>
+            <div className="mt-3 text-[12px] text-fg-subtle">Try pasting <code className="font-mono bg-surface-2 px-1 py-0.5 rounded">a@x.com, b@y.com, not-an-email</code></div>
+          </div>
+        </Card>
+      </Section>
+
+      {/* Avatar */}
+      <Section id="avatar" eyebrow="Primitive · 11" title="Avatar" subtitle="Circular avatar with initials fallback. Indigo accent matches the brand.">
+        <Card title="Sizes" snippet='size="sm | md | lg"'>
+          <div className="flex items-center gap-3">
+            <Avatar name="Amelia Chen" size="sm"/>
+            <Avatar name="Marco Del Rosario" size="md"/>
+            <Avatar name="Linnéa Holm" size="lg"/>
+            <Avatar name="Mai Nguyen" size="lg"/>
+            <Avatar name="Priya Shah" size="lg"/>
+          </div>
+        </Card>
+      </Section>
+
+      {/* TopBar */}
+      <Section id="topbar" eyebrow="Layout · 12" title="TopBar" subtitle="App-level navigation. Sticky-ready (caller decides position).">
+        <Card title="Default" snippet="<TopBar appName nav user />">
+          <TopBar
+            appName="Campaign Manager"
+            nav={[{ label: 'Campaigns', active: true }, { label: 'Recipients' }]}
+            user={{ name: 'Mai N.' }}
+            onSearchClick={()=>{}}
+            onNotificationsClick={()=>{}}
+            className="rounded-lg border"
+          />
+        </Card>
+      </Section>
+
+      {/* CampaignTable */}
+      <Section id="table" eyebrow="Composite · 13" title="CampaignTable" subtitle="Dense list table — composes StatusBadge + the inline sent-rate bar. Filter chips above drive this live.">
+        <Card title="Live · filtered" snippet="<CampaignTable campaigns onRowClick />">
+          {tableData.length === 0 ? (
+            <EmptyState compact icon={I.Inbox} title="No campaigns match" description="Try clearing the filter above." cta={{ label: 'Clear filter', onClick: () => setFilter('all') }}/>
+          ) : (
+            <CampaignTable campaigns={tableData}/>
+          )}
+        </Card>
+      </Section>
+
+      {/* Footer */}
+      <footer className="py-8">
+        <div className="max-w-[1280px] mx-auto px-8 flex items-center justify-between text-[12px] text-fg-subtle">
+          <div>@campaign-manager/ui v0.1.0 · 13 components · light + dark</div>
+          <div className="font-mono">npm run storybook · for full controls</div>
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

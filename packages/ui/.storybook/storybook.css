@@ -1,0 +1,9 @@
+/* Storybook canvas needs Tailwind compiled. In a real install:
+ *   npx tailwindcss -i ./.storybook/storybook.css -o ./.storybook/storybook.compiled.css --watch
+ * For now this file is a placeholder that imports the preset's directives.
+ */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #storybook-root { background: rgb(var(--cm-bg)); color: rgb(var(--cm-fg)); }
