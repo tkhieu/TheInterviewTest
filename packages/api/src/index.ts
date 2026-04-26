@@ -5,6 +5,7 @@ import { env } from './config/env.js';
 import { sequelize } from './db/sequelize.js';
 import { migrate } from './db/migrate.js';
 import { authRouter } from './routes/auth.js';
+import { campaignsRouter } from './routes/campaigns.js';
 import { errorHandler } from './lib/errors.js';
 
 async function main(): Promise<void> {
@@ -21,6 +22,7 @@ async function main(): Promise<void> {
   });
 
   app.use('/auth', authRouter);
+  app.use('/campaigns', campaignsRouter);
 
   app.use(errorHandler);
 
