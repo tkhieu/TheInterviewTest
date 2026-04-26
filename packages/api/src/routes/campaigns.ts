@@ -9,6 +9,7 @@ import {
   getCampaignDetail,
   listCampaigns,
 } from '../services/campaigns.js';
+import { scheduleCampaign, sendCampaign } from '../services/send.js';
 
 const idSchema = z.string().uuid();
 
@@ -34,6 +35,15 @@ const patchSchema = z
   })
   .strict()
   .refine((v) => Object.keys(v).length > 0, { message: 'No fields to update' });
+
+const scheduleSchema = z
+  .object({
+    scheduled_at: z
+      .string()
+      .datetime({ message: 'scheduled_at must be an ISO 8601 datetime' })
+      .transform((s) => new Date(s)),
+  })
+  .strict();
 
 function serializeCampaign(c: Campaign): Record<string, unknown> {
   return {
@@ -151,6 +161,37 @@ campaignsRouter.delete('/:id', async (req, res, next) => {
     }
     await campaign.destroy();
     res.status(204).send();
+  } catch (err) {
+    next(err);
+  }
+});
+
+campaignsRouter.post('/:id/schedule', validateBody(scheduleSchema), async (req, res, next) => {
+  try {
+    const userId = req.userId!;
+    const id = req.params.id;
+    if (!id || !idSchema.safeParse(id).success) {
+      next(errors.notFound('Campaign not found'));
+      return;
+    }
+    const { scheduled_at } = req.body as z.infer<typeof scheduleSchema>;
+    const campaign = await scheduleCampaign(id, userId, scheduled_at);
+    res.json(serializeCampaign(campaign));
+  } catch (err) {
+    next(err);
+  }
+});
+
+campaignsRouter.post('/:id/send', async (req, res, next) => {
+  try {
+    const userId = req.userId!;
+    const id = req.params.id;
+    if (!id || !idSchema.safeParse(id).success) {
+      next(errors.notFound('Campaign not found'));
+      return;
+    }
+    const result = await sendCampaign(id, userId);
+    res.status(202).json(result);
   } catch (err) {
     next(err);
   }
