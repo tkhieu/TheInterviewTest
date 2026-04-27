@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 import { ActionButton, Input, RecipientTagInput, Textarea } from '@campaign-manager/ui';
 import { useCreateCampaignMutation } from '../api.js';
 
@@ -52,6 +53,7 @@ export function CampaignNewPage() {
         body,
         recipient_emails: recipientEmails,
       }).unwrap();
+      toast.success(`"${res.name}" created`);
       navigate(`/campaigns/${res.id}`, { replace: true });
     } catch {
       // surfaced via `error` below

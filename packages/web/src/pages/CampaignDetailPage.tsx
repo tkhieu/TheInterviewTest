@@ -1,4 +1,5 @@
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'sonner';
 import {
   Accordion,
   AccordionContent,
@@ -15,6 +16,7 @@ import {
   useGetCampaignDetailQuery,
   useSendCampaignMutation,
 } from '../api.js';
+import { Skeleton } from '../components/Skeleton.js';
 
 export function CampaignDetailPage() {
   const { id = '' } = useParams<{ id: string }>();
@@ -35,7 +37,26 @@ export function CampaignDetailPage() {
   const [sendCampaign, { isLoading: isSending }] = useSendCampaignMutation();
   const [deleteCampaign, { isLoading: isDeleting }] = useDeleteCampaignMutation();
 
-  if (result.isLoading) return <div className="p-8 text-fg-muted">Loading…</div>;
+  if (result.isLoading) {
+    return (
+      <div className="p-8 max-w-5xl mx-auto">
+        <div className="mb-6 space-y-3">
+          <Skeleton className="h-7 w-72" />
+          <Skeleton className="h-4 w-96" />
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Skeleton key={i} className="h-24" />
+          ))}
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <Skeleton className="h-12" />
+          <Skeleton className="h-12" />
+        </div>
+        <Skeleton className="h-32" />
+      </div>
+    );
+  }
 
   if (result.error || !detail) {
     const isNotFound =
@@ -54,11 +75,27 @@ export function CampaignDetailPage() {
     );
   }
 
+  const extractErrorMessage = (err: unknown, fallback: string): string => {
+    if (
+      err &&
+      typeof err === 'object' &&
+      'data' in err &&
+      err.data &&
+      typeof err.data === 'object' &&
+      'error' in err.data
+    ) {
+      const inner = (err.data as { error: { message?: string } }).error;
+      if (inner?.message) return inner.message;
+    }
+    return fallback;
+  };
+
   const onSend = async () => {
     try {
       await sendCampaign(id).unwrap();
-    } catch {
-      /* error state available on the mutation hook if needed */
+      toast.success('Sending started — refreshing while it runs…');
+    } catch (err) {
+      toast.error(extractErrorMessage(err, 'Could not start send'));
     }
   };
 
@@ -66,9 +103,10 @@ export function CampaignDetailPage() {
     if (!window.confirm('Delete this campaign? This cannot be undone.')) return;
     try {
       await deleteCampaign(id).unwrap();
+      toast.success('Campaign deleted');
       navigate('/', { replace: true });
-    } catch {
-      /* error state available on the mutation hook if needed */
+    } catch (err) {
+      toast.error(extractErrorMessage(err, 'Could not delete campaign'));
     }
   };
 
