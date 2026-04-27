@@ -120,14 +120,32 @@ export const baseApi = createApi({
         limit: raw.limit,
         total: raw.total,
       }),
-      providesTags: ['Campaigns'],
+      providesTags: [{ type: 'Campaigns', id: 'LIST' }],
+    }),
+    getCampaignDetail: builder.query<BeCampaignDetail, string>({
+      query: (id) => `/campaigns/${id}`,
+      providesTags: (_result, _err, id) => [{ type: 'Campaigns', id }],
     }),
     createCampaign: builder.mutation<
       BeCampaignCreateResponse,
       { name: string; subject: string; body: string; recipient_emails: string[] }
     >({
       query: (body) => ({ url: '/campaigns', method: 'POST', body }),
-      invalidatesTags: ['Campaigns'],
+      invalidatesTags: [{ type: 'Campaigns', id: 'LIST' }],
+    }),
+    sendCampaign: builder.mutation<{ id: string; status: 'sending' }, string>({
+      query: (id) => ({ url: `/campaigns/${id}/send`, method: 'POST' }),
+      invalidatesTags: (_r, _e, id) => [
+        { type: 'Campaigns', id },
+        { type: 'Campaigns', id: 'LIST' },
+      ],
+    }),
+    deleteCampaign: builder.mutation<void, string>({
+      query: (id) => ({ url: `/campaigns/${id}`, method: 'DELETE' }),
+      invalidatesTags: (_r, _e, id) => [
+        { type: 'Campaigns', id },
+        { type: 'Campaigns', id: 'LIST' },
+      ],
     }),
   }),
 });
@@ -136,5 +154,8 @@ export const {
   useLoginMutation,
   useRegisterMutation,
   useListCampaignsQuery,
+  useGetCampaignDetailQuery,
   useCreateCampaignMutation,
+  useSendCampaignMutation,
+  useDeleteCampaignMutation,
 } = baseApi;
