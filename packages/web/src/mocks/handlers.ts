@@ -12,7 +12,7 @@ interface MockCampaign {
   created_at: string;
 }
 
-const mockCampaigns: MockCampaign[] = [
+export const mockCampaigns: MockCampaign[] = [
   {
     id: 'c1',
     name: 'Q4 Newsletter',
