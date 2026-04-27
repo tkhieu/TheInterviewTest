@@ -32,6 +32,18 @@ export interface BeCampaignList {
   total: number;
 }
 
+export interface BeCampaignCreateResponse {
+  id: string;
+  name: string;
+  subject: string;
+  body: string;
+  status: CampaignStatus;
+  scheduled_at: string | null;
+  created_at: string;
+  updated_at: string;
+  recipients_count: number;
+}
+
 export interface BeCampaignDetail extends BeCampaignListRow {
   body: string;
   scheduled_at: string | null;
@@ -110,7 +122,19 @@ export const baseApi = createApi({
       }),
       providesTags: ['Campaigns'],
     }),
+    createCampaign: builder.mutation<
+      BeCampaignCreateResponse,
+      { name: string; subject: string; body: string; recipient_emails: string[] }
+    >({
+      query: (body) => ({ url: '/campaigns', method: 'POST', body }),
+      invalidatesTags: ['Campaigns'],
+    }),
   }),
 });
 
-export const { useLoginMutation, useRegisterMutation, useListCampaignsQuery } = baseApi;
+export const {
+  useLoginMutation,
+  useRegisterMutation,
+  useListCampaignsQuery,
+  useCreateCampaignMutation,
+} = baseApi;
