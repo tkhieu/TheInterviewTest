@@ -1,4 +1,4 @@
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import {
   Accordion,
@@ -68,8 +68,8 @@ export function CampaignDetailPage() {
         <p className="text-rose-600 mb-4" role="alert">
           {isNotFound ? 'Campaign not found.' : 'Failed to load campaign.'}
         </p>
-        <ActionButton variant="secondary" asChild>
-          <Link to="/">Back to campaigns</Link>
+        <ActionButton variant="secondary" onClick={() => navigate('/')}>
+          Back to campaigns
         </ActionButton>
       </div>
     );

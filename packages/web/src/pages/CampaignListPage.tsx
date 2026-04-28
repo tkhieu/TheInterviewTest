@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { ActionButton, CampaignTable, EmptyState } from '@campaign-manager/ui';
 import { useListCampaignsQuery } from '../api.js';
 import { Skeleton } from '../components/Skeleton.js';
@@ -47,8 +47,8 @@ export function CampaignListPage() {
           description="Create your first campaign to start sending."
         />
         <div className="mt-6 flex justify-center">
-          <ActionButton asChild>
-            <Link to="/campaigns/new">New campaign</Link>
+          <ActionButton onClick={() => navigate('/campaigns/new')}>
+            New campaign
           </ActionButton>
         </div>
       </div>
@@ -61,8 +61,8 @@ export function CampaignListPage() {
           <h1 className="text-xl font-semibold text-fg tracking-[-0.011em]">Campaigns</h1>
           <span className="text-[13px] text-fg-muted tabular-nums">{data.total} total</span>
         </div>
-        <ActionButton asChild>
-          <Link to="/campaigns/new">New campaign</Link>
+        <ActionButton onClick={() => navigate('/campaigns/new')}>
+          New campaign
         </ActionButton>
       </div>
       <CampaignTable
